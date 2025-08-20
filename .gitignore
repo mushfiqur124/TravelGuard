@@ -67,8 +67,3 @@ build/
 # Backup files
 *.bak
 *.backup
-
-# Temporarily exclude large data files for initial push
-data/scraping-progress.json
-data/countries-db.json
-data/chrome-data-other.json
