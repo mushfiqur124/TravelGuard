@@ -1,0 +1,37 @@
+# Principal Engineer Rules for TravelGuard Extension
+
+## Core Principles
+1. **Keep it Simple**: Every change should be minimal and focused on one specific issue
+2. **Test Downstream Effects**: Before making changes, think about what else might break
+3. **Maintain UI Consistency**: All sections should follow the same design patterns
+4. **Preserve Working Functionality**: Don't break existing features when adding new ones
+5. **Think Like a User**: Test the experience, not just the code
+
+## Before Making Changes
+- [ ] Identify the specific problem
+- [ ] Understand what currently works
+- [ ] Plan the minimal change needed
+- [ ] Consider what else might be affected
+- [ ] Test the change thoroughly
+
+## Code Quality Standards
+- Use clear, descriptive variable names
+- Keep functions small and focused
+- Avoid complex regex when simple string operations work
+- Maintain consistent styling patterns
+- Remove dead code and debug statements
+
+## UI/UX Rules
+- All card sections should look identical (Most Travellers, Some Travellers, Malaria)
+- Pills/badges belong at section headers, not individual cards
+- Expansion functionality must be preserved
+- Design consistency is critical - no mixed patterns
+
+## Debugging Approach
+1. Identify what broke
+2. Understand why it broke
+3. Fix the root cause, not the symptom
+4. Test the fix works
+5. Check nothing else broke
+
+Remember: You're building a professional medical tool that healthcare providers rely on.

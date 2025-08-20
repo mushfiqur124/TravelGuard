@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "TravelGuard",
+  "version": "1.0.0",
+  "description": "Professional travel health extension that automatically detects destinations and provides instant vaccination recommendations for healthcare providers",
+  
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  
+  "permissions": [
+    "storage",
+    "background",
+    "activeTab",
+    "scripting"
+  ],
+  
+  "host_permissions": [
+    "*://*/*"
+  ],
+  
+
+  
+  "background": {
+    "service_worker": "background/data-updater.js"
+  },
+  
+  "action": {
+    "default_title": "TravelGuard - Open Vaccination Guide"
+  },
+  
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com"
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/fonts/*",
+        "data/*"
+      ],
+      "matches": [
+        "*://*/*"
+      ]
+    }
+  ]
+}

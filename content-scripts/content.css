@@ -1,0 +1,1251 @@
+/**
+ * TravelGuard - Professional Medical Sidebar Styles
+ * Design System: Healthcare Blue (#063E54), Google Fonts Montserrat
+ * 
+ * Note: Add this to HTML head for faster loading:
+ * <link rel="preconnect" href="https://fonts.googleapis.com">
+ * <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ */
+
+/* Load Google Fonts Montserrat properly in Chrome extension */
+
+/* ========================================
+   SIDEBAR CONTAINER
+   ======================================== */
+
+#travelhealth-sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 420px !important;
+  height: 100vh !important;
+  z-index: 2147483647 !important;
+  font-family: 'Montserrat', sans-serif !important;
+  
+  /* Animation */
+  transform: translateX(100%) !important;
+  transition: all 0.3s ease-in-out !important;
+  
+  /* Layout */
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+/* Sidebar States */
+#travelhealth-sidebar.visible {
+  transform: translateX(0) !important;
+}
+
+#travelhealth-sidebar.hidden {
+  transform: translateX(100%) !important;
+}
+
+/* Main Sidebar */
+.th-sidebar-main {
+  width: 420px !important;
+  height: 100vh !important;
+  background: #FFFFFF !important;
+  border-left: 2px solid #063E54 !important;
+  box-shadow: -4px 0 20px rgba(6, 62, 84, 0.1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+/* Floating Icon for Minimized State */
+.th-floating-icon {
+  position: fixed !important;
+  top: 50% !important;
+  right: 15px !important;
+  transform: translateY(-50%) !important;
+  z-index: 2147483647 !important;
+  display: none !important;
+}
+
+/* Minimized State */
+#travelhealth-sidebar.th-minimized .th-sidebar-main {
+  display: none !important;
+}
+
+#travelhealth-sidebar.th-minimized .th-floating-icon {
+  display: block !important;
+}
+
+/* ========================================
+   HEADER SECTION
+   ======================================== */
+
+.th-header {
+  background: #063E54 !important;
+  color: #FFFFFF !important;
+  padding: 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  flex-shrink: 0 !important;
+}
+
+.th-header-content {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 16px 20px !important;
+}
+
+.th-logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.th-logo-icon {
+  font-size: 22px !important;
+  font-weight: 500 !important;
+  color: #FFFFFF !important;
+}
+
+.th-logo-text {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #FFFFFF !important;
+  letter-spacing: 0.5px !important;
+}
+
+.th-header-controls {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.th-control-btn {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #FFFFFF !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  line-height: 1 !important;
+}
+
+.th-control-btn:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ========================================
+   INSTRUCTIONS SECTION
+   ======================================== */
+
+.th-instructions {
+  padding: 16px 20px 12px 20px !important;
+  background: #F5F5F5 !important;
+  border-bottom: 1px solid #E0E0E0 !important;
+  flex-shrink: 0 !important;
+}
+
+.th-instructions p {
+  margin: 0 !important;
+  font-size: 14px !important;
+  color: #666666 !important;
+  line-height: 1.5 !important;
+  text-align: center !important;
+  font-weight: 400 !important;
+}
+
+/* ========================================
+   COUNTRY SELECTION SECTION
+   ======================================== */
+
+.th-country-selection {
+  padding: 20px !important;
+  border-bottom: 1px solid #F0F0F0 !important;
+  flex-shrink: 0 !important;
+}
+
+.th-search-container {
+  position: relative !important;
+}
+
+.th-search-input-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  background: #FFFFFF !important;
+  border: 2px solid #E0E0E0 !important;
+  border-radius: 8px !important;
+  padding: 0 12px !important;
+  transition: border-color 0.2s ease !important;
+}
+
+.th-search-input-wrapper:focus-within {
+  border-color: #063E54 !important;
+}
+
+.th-search-icon {
+  color: #666666 !important;
+  font-size: 22px !important;
+  margin-right: 12px !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+#th-country-input {
+  flex: 1 !important;
+  border: none !important;
+  background: none !important;
+  padding: 12px 0 !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 14px !important;
+  color: #000000 !important;
+  outline: none !important;
+}
+
+#th-country-input::placeholder {
+  color: #999999 !important;
+}
+
+
+
+/* Dropdown - moved to bottom of file for better organization */
+
+.th-dropdown-content {
+  padding: 8px 0 !important;
+}
+
+.th-dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  padding: 10px 16px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.th-dropdown-item:hover {
+  background: #F5F5F5 !important;
+}
+
+.th-dropdown-item.th-no-results {
+  cursor: default !important;
+  color: #999999 !important;
+}
+
+.th-dropdown-item.th-no-results:hover {
+  background: transparent !important;
+}
+
+
+
+.th-item-text {
+  flex: 1 !important;
+  font-size: 14px !important;
+  color: #000000 !important;
+}
+
+.th-item-check {
+  font-size: 12px !important;
+  color: #28A745 !important;
+  margin-left: 8px !important;
+}
+
+/* Selected Countries */
+.th-selected-countries {
+  margin-top: 16px !important;
+}
+
+.th-selected-header {
+  margin-bottom: 8px !important;
+}
+
+.th-selected-title {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #063E54 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.th-selected-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.th-selected-item {
+  display: flex !important;
+  align-items: center !important;
+  background: #F5F5F5 !important;
+  border: 1px solid #E0E0E0 !important;
+  border-radius: 20px !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+}
+
+.th-selected-name {
+  color: #000000 !important;
+  font-weight: 500 !important;
+  margin-right: 6px !important;
+}
+
+.th-selected-remove {
+  background: none !important;
+  border: none !important;
+  color: #666666 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+}
+
+.th-selected-remove:hover {
+  background: #E74C3C !important;
+  color: #FFFFFF !important;
+}
+
+/* ========================================
+   RESULTS SECTION
+   ======================================== */
+
+.th-results {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.th-empty-results {
+  text-align: center !important;
+  padding: 40px 20px !important;
+  color: #999999 !important;
+}
+
+.th-empty-icon {
+  font-size: 32px !important;
+  display: block !important;
+  margin-bottom: 16px !important;
+  opacity: 0.6 !important;
+}
+
+.th-empty-results p {
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+.th-results-content {
+  padding: 20px !important;
+}
+
+/* Country Results */
+.th-country-result {
+  margin-bottom: 24px !important;
+  padding-bottom: 24px !important;
+  border-bottom: 1px solid #F0F0F0 !important;
+}
+
+.th-country-result:last-child {
+  border-bottom: none !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.th-country-header {
+  display: flex !important;
+  align-items: center !important;
+  margin-bottom: 16px !important;
+  padding-bottom: 8px !important;
+  border-bottom: 2px solid #063E54 !important;
+}
+
+
+
+.th-country-name {
+  margin: 0 !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #063E54 !important;
+}
+
+.th-country-link {
+  color: #063E54 !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.th-country-link:hover {
+  color: #0a4a61 !important;
+  text-decoration: underline !important;
+}
+
+.th-country-link:visited {
+  color: #063E54 !important;
+}
+
+.th-country-link:active {
+  color: #052d3f !important;
+}
+
+/* Vaccine Sections */
+.th-vaccine-section {
+  margin-bottom: 20px !important;
+}
+
+/* Old risks section styling removed - now uses th-vaccine-section */
+
+/* Removed duplicate - see later definition */
+
+.th-section-icon {
+  font-size: 18px !important;
+  margin-right: 10px !important;
+  width: 20px !important;
+  text-align: center !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Vaccine Items */
+.th-vaccine-list {
+  margin-left: 16px !important;
+  padding-left: 0 !important;
+}
+
+.th-vaccine-item {
+  background: #F8F9FA !important;
+  border-left: 3px solid #063E54 !important;
+  border-radius: 0 6px 6px 0 !important;
+  padding: 12px 16px !important;
+  margin-bottom: 8px !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.th-vaccine-item:hover {
+  background: #F0F0F0 !important;
+}
+
+.th-vaccine-item.th-risk-based {
+  border-left-color: #E74C3C !important;
+  background: #FFF8F8 !important;
+}
+
+.th-vaccine-item.th-risk-based:hover {
+  background: #FFF0F0 !important;
+}
+
+/* Malaria Items Styling */
+.th-vaccine-item.th-malaria-item {
+  border-left-color: #FF7043 !important;
+  background: #FFF3E0 !important;
+}
+
+.th-vaccine-item.th-malaria-item:hover {
+  background: #FFE0B2 !important;
+}
+
+/* Other Health Risks Items Styling */
+.th-vaccine-item.th-other-risks-item {
+  border-left-color: #F57C00 !important;
+  background: #FFF8E1 !important;
+}
+
+.th-vaccine-item.th-other-risks-item:hover {
+  background: #FFECB3 !important;
+}
+
+.th-vaccine-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 6px !important;
+}
+
+.th-vaccine-name {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #063E54 !important;
+  margin: 0 !important;
+}
+
+.th-priority-badge {
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding: 2px 6px !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+
+.th-priority-badge.th-standard {
+  background: #E8F4FD !important;
+  color: #063E54 !important;
+}
+
+.th-priority-badge.th-risk {
+  background: #FEE !important;
+  color: #E74C3C !important;
+}
+
+.th-vaccine-desc {
+  margin: 0 !important;
+  font-size: 12px !important;
+  color: #333333 !important;
+  line-height: 1.4 !important;
+}
+
+/* Old risk items styling removed - now styled in th-risks-content */
+
+/* ========================================
+   FOOTER SECTION
+   ======================================== */
+
+.th-footer {
+  padding: 12px 20px !important;
+  background: #F5F5F5 !important;
+  border-top: 1px solid #E0E0E0 !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+.th-footer-text {
+  font-size: 11px !important;
+  color: #666666 !important;
+  font-weight: 400 !important;
+}
+
+.th-footer-text a {
+  color: #063E54 !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+.th-footer-text a:hover {
+  text-decoration: underline !important;
+}
+
+.th-footer-update {
+  font-size: 10px !important;
+  color: #888888 !important;
+  margin-top: 4px !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+  font-style: italic !important;
+  opacity: 0.8 !important;
+}
+
+/* ========================================
+   FLOATING EXPAND BUTTON
+   ======================================== */
+
+.th-expand-btn {
+  background: #063E54 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 16px rgba(6, 62, 84, 0.3) !important;
+  border: 2px solid rgba(255, 255, 255, 0.9) !important;
+}
+
+.th-expand-btn:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 20px rgba(6, 62, 84, 0.4) !important;
+  background: #0a4a61 !important;
+}
+
+.th-expand-btn:active {
+  transform: scale(1.05) !important;
+}
+
+.th-expand-btn .th-logo-icon {
+  font-size: 20px !important;
+  font-weight: 500 !important;
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+
+.th-results::-webkit-scrollbar,
+.th-dropdown::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.th-results::-webkit-scrollbar-track,
+.th-dropdown::-webkit-scrollbar-track {
+  background: #F5F5F5 !important;
+  border-radius: 3px !important;
+}
+
+.th-results::-webkit-scrollbar-thumb,
+.th-dropdown::-webkit-scrollbar-thumb {
+  background: #CCCCCC !important;
+  border-radius: 3px !important;
+}
+
+.th-results::-webkit-scrollbar-thumb:hover,
+.th-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #999999 !important;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+  #travelhealth-sidebar {
+    width: 100vw !important;
+    max-width: 420px !important;
+  }
+  
+  .th-sidebar-main {
+    width: 100vw !important;
+    max-width: 420px !important;
+  }
+}
+
+/* ========================================
+   RESET CONFLICTS & FORCE GOOGLE FONTS
+   ======================================== */
+
+#travelhealth-sidebar,
+#travelhealth-sidebar * {
+  box-sizing: border-box !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-synthesis: none !important;
+}
+
+/* Override any potential host page styles */
+#travelhealth-sidebar {
+  all: initial !important;
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 420px !important;
+  height: 100vh !important;
+  z-index: 2147483647 !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-display: swap !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  font-synthesis: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transform: translateX(100%) !important;
+  transition: all 0.3s ease-in-out !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+#travelhealth-sidebar.visible {
+  transform: translateX(0) !important;
+}
+
+#travelhealth-sidebar.hidden {
+  transform: translateX(100%) !important;
+}
+
+/* ========================================
+   SEARCH DROPDOWN FUNCTIONALITY
+   ======================================== */
+
+.th-dropdown {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: #ffffff !important;
+  border: 1px solid #e9ecef !important;
+  border-radius: 0 0 6px 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  display: none !important;
+  z-index: 1000 !important;
+}
+
+.th-dropdown.th-visible {
+  display: block !important;
+}
+
+.th-dropdown-content {
+  padding: 8px 0 !important;
+}
+
+.th-dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  padding: 12px 16px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+  border-bottom: 1px solid #f8f9fa !important;
+}
+
+.th-dropdown-item:last-child {
+  border-bottom: none !important;
+}
+
+.th-dropdown-item:hover {
+  background: #f8f9fa !important;
+}
+
+
+
+.th-item-text {
+  font-size: 14px !important;
+  color: #333333 !important;
+  flex: 1 !important;
+  text-align: left !important;
+}
+
+.th-item-check {
+  font-size: 14px !important;
+  color: #28a745 !important;
+  margin-left: auto !important;
+  font-weight: 500 !important;
+}
+
+/* Expandable Vaccine Items */
+.th-vaccine-item.th-expandable {
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  border-radius: 6px !important;
+}
+
+.th-vaccine-item.th-expandable:hover {
+  background: rgba(6, 62, 84, 0.02) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.th-expand-indicator {
+  font-size: 16px !important;
+  color: #666666 !important;
+  margin-left: auto !important;
+  transition: all 0.2s ease !important;
+  opacity: 0.7 !important;
+}
+
+.th-vaccine-item.th-expandable:hover .th-expand-indicator {
+  color: #063E54 !important;
+  opacity: 1 !important;
+}
+
+.th-vaccine-item.th-expanded .th-expand-indicator {
+  color: #063E54 !important;
+  transform: scale(1.1) !important;
+}
+
+.th-vaccine-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.th-desc-text,
+.th-desc-full {
+  transition: opacity 0.2s ease !important;
+}
+
+/* No Data Message */
+.th-no-data {
+  padding: 20px !important;
+  text-align: center !important;
+  color: #666666 !important;
+  font-style: italic !important;
+  background: #f8f9fa !important;
+  border-radius: 6px !important;
+  margin: 10px 0 !important;
+}
+
+.th-no-data a {
+  color: #063E54 !important;
+  text-decoration: underline !important;
+  font-weight: 500 !important;
+}
+
+.th-no-data a:hover {
+  color: #085670 !important;
+  text-decoration: none !important;
+}
+
+/* Selected Countries Display */
+.th-selected-header h3 {
+  margin: 0 0 12px 0 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #063E54 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.th-selected-list {
+  margin-bottom: 16px !important;
+}
+
+.th-selected-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: #f8f9fa !important;
+  border: 1px solid #e9ecef !important;
+  border-radius: 20px !important;
+  padding: 8px 12px !important;
+  margin-bottom: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+.th-selected-item:hover {
+  background: #e9ecef !important;
+}
+
+.th-selected-name {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #063E54 !important;
+}
+
+.th-remove-btn {
+  background: #dc3545 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 20px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.th-remove-btn:hover {
+  background: #c82333 !important;
+}
+
+/* Loading State */
+.th-loading {
+  text-align: center !important;
+  padding: 40px 20px !important;
+  color: #6c757d !important;
+}
+
+.th-loading-icon {
+  font-size: 24px !important;
+  margin-bottom: 12px !important;
+  animation: spin 1s linear infinite !important;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   VACCINE ITEM EXPANSION FUNCTIONALITY
+   ======================================== */
+
+.th-vaccine-item {
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 8px !important;
+  margin-bottom: 12px !important;
+  background: white !important;
+  transition: all 0.2s ease !important;
+}
+
+.th-vaccine-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+.th-vaccine-item.th-expandable {
+  cursor: pointer !important;
+}
+
+.th-vaccine-header {
+  padding: 12px 16px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.th-vaccine-name {
+  font-weight: 600 !important;
+  color: #063E54 !important;
+  font-size: 14px !important;
+}
+
+.th-priority-badge {
+  font-size: 11px !important;
+  padding: 4px 8px !important;
+  border-radius: 12px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+}
+
+.th-priority-badge.th-essential {
+  background: #d32f2f !important;
+  color: white !important;
+}
+
+.th-priority-badge.th-standard {
+  background: #1976d2 !important;
+  color: white !important;
+}
+
+.th-priority-badge.th-some {
+  background: #f57c00 !important;
+  color: white !important;
+}
+
+.th-priority-badge.th-risk {
+  background: #7b1fa2 !important;
+  color: white !important;
+}
+
+.th-expand-indicator {
+  color: #666 !important;
+  font-size: 12px !important;
+  transition: transform 0.2s ease !important;
+  display: inline-block !important;
+  margin-left: 8px !important;
+  line-height: 1 !important;
+}
+
+.th-vaccine-item.th-expanded .th-expand-indicator {
+  transform: rotate(90deg) !important;
+}
+
+.th-vaccine-desc-container {
+  border-top: 1px solid #f0f0f0 !important;
+}
+
+.th-vaccine-desc {
+  padding: 12px 16px !important;
+}
+
+.th-desc-text {
+  color: #555 !important;
+  line-height: 1.4 !important;
+  font-size: 13px !important;
+}
+
+.th-desc-full {
+  padding-top: 12px !important;
+  border-top: 1px solid #f0f0f0 !important;
+  margin-top: 12px !important;
+}
+
+/* Ensure correct initial states */
+.th-vaccine-item:not(.th-expanded) .th-desc-full {
+  display: none !important;
+}
+
+.th-vaccine-item.th-expanded .th-desc-text {
+  display: none !important;
+}
+
+.th-vaccine-item.th-expanded .th-desc-full {
+  display: block !important;
+}
+
+.th-main-description {
+  margin-bottom: 16px !important;
+  color: #333 !important;
+  line-height: 1.5 !important;
+}
+
+.th-section {
+  margin-bottom: 16px !important;
+}
+
+.th-section-heading {
+  color: #2c5aa0 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin: 12px 0 8px 0 !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  padding-bottom: 4px !important;
+}
+
+.th-section p {
+  color: #444 !important;
+  line-height: 1.5 !important;
+  margin-bottom: 8px !important;
+}
+
+/* Section Title Styling */
+.th-section-title {
+  color: #063E54 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  margin: 20px 0 12px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  gap: 12px !important;
+}
+
+.th-section-title.th-section-clickable {
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  background: #F8F9FA !important;
+  justify-content: flex-start !important;
+}
+
+.th-section-title.th-section-clickable:hover {
+  background: #E9ECEF !important;
+}
+
+.th-section-expand-indicator {
+  font-size: 14px !important;
+  color: #666666 !important;
+  transition: transform 0.2s ease !important;
+  margin-left: auto !important;
+  font-weight: bold !important;
+  margin-right: 0 !important;
+}
+
+.th-section-title .th-priority-badge {
+  margin-left: 12px !important;
+  margin-right: 0 !important;
+}
+
+/* Remove special malaria container styling - make it consistent with other sections */
+.th-malaria-section .th-section-title.th-section-clickable {
+  background: #F8F9FA !important;
+  border: none !important;
+}
+
+.th-malaria-section .th-section-title.th-section-clickable:hover {
+  background: #E9ECEF !important;
+}
+
+/* Country Accordion Styling */
+.th-country-expandable .th-country-header {
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 12px 16px !important;
+  background: #f8f9fa !important;
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.th-country-expandable .th-country-header:hover {
+  background: #e9ecef !important;
+}
+
+.th-country-expand-indicator {
+  color: #666 !important;
+  font-size: 14px !important;
+  transition: transform 0.2s ease !important;
+  font-weight: bold !important;
+  margin-left: auto !important;
+}
+
+.th-country-expanded .th-country-expand-indicator {
+  transform: rotate(180deg) !important;
+}
+
+.th-country-content {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Default state - country content hidden unless expanded */
+.th-country-expandable:not(.th-country-expanded) .th-country-content {
+  display: none !important;
+}
+
+/* Section Collapse Functionality */
+.th-vaccine-section:not(.th-section-expanded) .th-vaccine-list {
+  display: none !important;
+}
+
+.th-malaria-section:not(.th-section-expanded) .th-vaccine-list {
+  display: none !important;
+}
+
+/* Ensure sections start expanded by default */
+.th-vaccine-section.th-section-expanded .th-vaccine-list,
+.th-malaria-section.th-section-expanded .th-vaccine-list {
+  display: block !important;
+}
+
+/* Section header transitions */
+.th-section-expanded .th-section-expand-indicator {
+  transform: rotate(180deg) !important;
+}
+
+/* Collapsed sections */
+.th-vaccine-section:not(.th-section-expanded) .th-section-expand-indicator {
+  transform: rotate(90deg) !important;
+}
+
+.th-country-specific,
+.th-prevention-advice,
+.th-vaccination-info,
+.th-risk-factors,
+.th-additional-sections {
+  margin-bottom: 16px !important;
+}
+
+.th-desc-full h6 {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #063E54 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  margin: 0 0 8px 0 !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  padding-bottom: 4px !important;
+}
+
+.th-desc-full p {
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: #555 !important;
+  margin: 0 0 8px 0 !important;
+}
+
+.th-desc-full ul {
+  margin: 0 0 8px 16px !important;
+  padding: 0 !important;
+}
+
+.th-desc-full li {
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  color: #555 !important;
+  margin-bottom: 4px !important;
+}
+
+.th-additional-section {
+  background: #f8f9fa !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+.th-additional-section:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* ========================================
+   MALARIA SECTION - Now Consistent with Other Sections
+   ======================================== */
+
+.th-malaria-section {
+  margin-bottom: 20px !important;
+}
+
+.th-malaria-content {
+  padding: 0 !important;
+}
+
+/* Removed special malaria content styling - use default vaccine styling */
+
+.th-malaria-content-text {
+  color: #424242 !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  margin: 0 0 8px 0 !important;
+  white-space: pre-line !important;
+  word-wrap: break-word !important;
+}
+
+.th-malaria-list {
+  margin: 0 !important;
+  padding-left: 20px !important;
+  list-style-type: disc !important;
+}
+
+.th-malaria-list li {
+  color: #424242 !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  margin-bottom: 8px !important;
+  word-wrap: break-word !important;
+}
+
+.th-malaria-content-text p {
+  margin-bottom: 12px !important;
+  color: #424242 !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+
+
+/* Risk Areas Styling */
+/* Risk Items Content Styling */
+.th-risks-content {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.th-risk-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  margin-bottom: 4px !important;
+}
+
+.th-risk-bullet {
+  font-size: 14px !important;
+  color: #F57C00 !important;
+  margin-top: 2px !important;
+  line-height: 1 !important;
+}
+
+.th-risk-text {
+  font-size: 13px !important;
+  color: #333333 !important;
+  line-height: 1.4 !important;
+  flex: 1 !important;
+}
+
+/* Removed detailed risk level styling */
+
+/* Special Groups Styling */
+/* Removed special groups styling */
+
+/* Removed group styling */
+
+/* Malaria Footer */
+/* Removed malaria footer styling */

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TravelGuard</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="logo">
+        <div class="logo-icon">✚</div>
+        <div class="logo-text">
+          <h1>TravelGuard</h1>
+          <span class="subtitle">Extension</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Launch Actions -->
+    <div class="launch-section">
+      <button class="launch-btn primary" id="open-sidebar-btn">
+        <span class="btn-icon">▶</span>
+        <span class="btn-text">Open Vaccination Guide</span>
+      </button>
+      
+      <button class="launch-btn secondary" id="scan-page-btn">
+        <span class="btn-icon">⌕</span>
+        <span class="btn-text">Scan Current Page</span>
+      </button>
+      
+      <button class="launch-btn secondary" id="search-country-btn">
+        <span class="btn-icon">⊕</span>
+        <span class="btn-text">Search Country</span>
+      </button>
+    </div>
+
+    <!-- Status -->
+    <div class="status-mini">
+      <span class="status-indicator" id="status-dot">●</span>
+      <span class="status-text" id="status-text">Ready</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

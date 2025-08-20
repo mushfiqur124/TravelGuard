@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-08-18T15:37:58.050Z",
+  "countriesCount": 292,
+  "version": "1.0.0",
+  "regions": [
+    "Asia",
+    "Europe",
+    "Africa",
+    "Oceania",
+    "Other",
+    "Americas"
+  ],
+  "totalSize": 7838659
+}

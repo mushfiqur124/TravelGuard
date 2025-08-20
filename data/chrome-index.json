@@ -1,0 +1,21 @@
+{
+  "regions": [
+    "Asia",
+    "Europe",
+    "Africa",
+    "Americas",
+    "Oceania",
+    "Other"
+  ],
+  "totalCountries": 292,
+  "lastUpdated": "2025-08-18T16:29:37.771Z",
+  "version": "1.0.0",
+  "dataFiles": [
+    "chrome-data-asia.json",
+    "chrome-data-europe.json",
+    "chrome-data-africa.json",
+    "chrome-data-americas.json",
+    "chrome-data-oceania.json",
+    "chrome-data-other.json"
+  ]
+}
