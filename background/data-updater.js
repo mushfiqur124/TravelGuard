@@ -7,6 +7,9 @@
 chrome.runtime.onInstalled.addListener(async (details) => {
   console.log('🩺 TravelGuard installed');
   
+  // Create context menu items
+  createContextMenus();
+  
   if (details.reason === 'install') {
     // First time installation
     await initializeExtension();
@@ -20,6 +23,289 @@ chrome.runtime.onStartup.addListener(() => {
   console.log('TravelGuard: Background service worker started');
   checkDataUpdate();
 });
+
+/**
+ * Create context menu items for TravelGuard
+ */
+function createContextMenus() {
+  // Remove any existing context menus first
+  chrome.contextMenus.removeAll(() => {
+    // Create the main context menu item
+    chrome.contextMenus.create({
+      id: "travelguard-search",
+      title: "Search travel destinations with TravelGuard",
+      contexts: ["selection"],
+      documentUrlPatterns: ["*://*/*"]
+    });
+    
+    console.log('🎯 Context menu created');
+  });
+}
+
+/**
+ * Handle context menu clicks
+ */
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === "travelguard-search") {
+    console.log('🎯 Context menu clicked with selection:', info.selectionText);
+    
+    try {
+      // Parse the selected text for travel destinations
+      const destinations = parseDestinations(info.selectionText);
+      console.log('🗺️ Parsed destinations:', destinations);
+      
+      if (destinations.length === 0) {
+        // Show a message if no destinations found
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: () => {
+            alert('TravelGuard: No travel destinations found in the selected text. Please select text containing city names or country names.');
+          }
+        });
+        return;
+      }
+      
+      // Inject scripts and open sidebar with pre-selected destinations
+      await openSidebarWithDestinations(tab, destinations);
+      
+    } catch (error) {
+      console.error('❌ Error handling context menu click:', error);
+      
+      // Show error message to user
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: (errorMessage) => {
+          alert(`TravelGuard Error: ${errorMessage}`);
+        },
+        args: [error.message]
+      });
+    }
+  }
+});
+
+/**
+ * Parse travel destinations from selected text
+ */
+function parseDestinations(selectedText) {
+  if (!selectedText || typeof selectedText !== 'string') {
+    return [];
+  }
+  
+  console.log('🔍 Parsing text:', selectedText);
+  
+  // Clean up the text - remove extra whitespace and normalize
+  const cleanText = selectedText.trim().toLowerCase();
+  
+  // Split by common separators: comma, semicolon, "and", "or", newlines
+  const parts = cleanText.split(/[,;]|\sand\s|\sor\s|\n|\r\n/)
+    .map(part => part.trim())
+    .filter(part => part.length > 0);
+  
+  console.log('📝 Text parts:', parts);
+  
+  const destinations = [];
+  const cityMappings = getCityToCountryMappings();
+  
+  for (const part of parts) {
+    // Remove common travel-related words and clean up
+    const cleaned = part
+      .replace(/\b(travelling?\s+to|visiting|going\s+to|trip\s+to|vacation\s+in)\b/gi, '')
+      .replace(/[^\w\s-]/g, '') // Remove special chars except hyphens
+      .trim();
+    
+    if (cleaned.length < 2) continue; // Skip very short strings
+    
+    // Check if it's a known city
+    if (cityMappings[cleaned]) {
+      const country = cityMappings[cleaned];
+      if (!destinations.includes(country)) {
+        destinations.push(country);
+        console.log(`🏙️ Found city "${cleaned}" -> country "${country}"`);
+      }
+    }
+    // Otherwise, treat it as a potential country name
+    else {
+      // Capitalize first letter of each word for country name format
+      const countryName = cleaned
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+      
+      if (!destinations.includes(countryName) && countryName.length > 2) {
+        destinations.push(countryName);
+        console.log(`🌍 Found potential country: "${countryName}"`);
+      }
+    }
+  }
+  
+  console.log('🎯 Final destinations:', destinations);
+  return destinations;
+}
+
+/**
+ * Get city to country mappings (simplified version for background script)
+ */
+function getCityToCountryMappings() {
+  // A subset of the most common cities that Canadian pharmacists might encounter
+  return {
+    // Medical tourism destinations
+    "bangkok": "Thailand",
+    "phuket": "Thailand",
+    "mumbai": "India",
+    "delhi": "India",
+    "new delhi": "India",
+    "bangalore": "India",
+    "chennai": "India",
+    "mexico city": "Mexico",
+    "tijuana": "Mexico",
+    "cancun": "Mexico",
+    "istanbul": "Turkey",
+    "seoul": "South Korea",
+    "singapore": "Singapore",
+    "kuala lumpur": "Malaysia",
+    "manila": "Philippines",
+    "dubai": "United Arab Emirates",
+    "sao paulo": "Brazil",
+    "rio de janeiro": "Brazil",
+    "budapest": "Hungary",
+    "prague": "Czech Republic",
+    
+    // Popular vacation destinations
+    "paris": "France",
+    "london": "United Kingdom",
+    "rome": "Italy",
+    "barcelona": "Spain",
+    "madrid": "Spain",
+    "amsterdam": "Netherlands",
+    "berlin": "Germany",
+    "vienna": "Austria",
+    "zurich": "Switzerland",
+    "stockholm": "Sweden",
+    "copenhagen": "Denmark",
+    "oslo": "Norway",
+    "helsinki": "Finland",
+    "moscow": "Russia",
+    "st petersburg": "Russia",
+    "tokyo": "Japan",
+    "kyoto": "Japan",
+    "osaka": "Japan",
+    "beijing": "China",
+    "shanghai": "China",
+    "hong kong": "Hong Kong",
+    "sydney": "Australia",
+    "melbourne": "Australia",
+    "auckland": "New Zealand",
+    "cairo": "Egypt",
+    "marrakech": "Morocco",
+    "casablanca": "Morocco",
+    "cape town": "South Africa",
+    "johannesburg": "South Africa",
+    "nairobi": "Kenya",
+    "addis ababa": "Ethiopia",
+    "lagos": "Nigeria",
+    "accra": "Ghana",
+    "kingston": "Jamaica",
+    "nassau": "Bahamas",
+    "bridgetown": "Barbados",
+    "havana": "Cuba",
+    "santo domingo": "Dominican Republic",
+    "lima": "Peru",
+    "cusco": "Peru",
+    "buenos aires": "Argentina",
+    "santiago": "Chile",
+    "bogota": "Colombia",
+    "quito": "Ecuador",
+    "la paz": "Bolivia",
+    "montevideo": "Uruguay",
+    "asuncion": "Paraguay"
+  };
+}
+
+/**
+ * Open sidebar with pre-selected destinations
+ */
+async function openSidebarWithDestinations(tab, destinations) {
+  console.log('🚀 Opening sidebar with destinations:', destinations);
+  
+  try {
+    // Step 1: Check if scripts are already loaded
+    const checkResult = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        if (window.vaccinationSidebar) {
+          return {
+            exists: true,
+            isVisible: window.vaccinationSidebar.isVisible,
+            isMinimized: window.vaccinationSidebar.isMinimized
+          };
+        }
+        return { exists: false };
+      }
+    });
+    
+    const sidebarState = checkResult[0].result;
+    
+    if (!sidebarState.exists) {
+      console.log('🔧 Scripts not loaded, injecting them...');
+      
+      // Inject CSS first
+      await chrome.scripting.insertCSS({
+        target: { tabId: tab.id },
+        files: ['content-scripts/content.css']
+      });
+      
+      // Inject JS scripts in correct order
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['content-scripts/data-loader.js']
+      });
+      
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['content-scripts/detector.js']
+      });
+      
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['content-scripts/sidebar.js']
+      });
+      
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['content-scripts/integration-tests.js']
+      });
+      
+      // Wait for scripts to initialize
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    
+    // Step 2: Open sidebar and search for destinations
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: (destinationsToSearch) => {
+        console.log('🎯 Opening sidebar with destinations:', destinationsToSearch);
+        
+        if (window.vaccinationSidebar) {
+          // Open the sidebar
+          window.vaccinationSidebar.openSidebar();
+          
+          // Search for the destinations
+          window.vaccinationSidebar.searchMultipleDestinations(destinationsToSearch);
+        } else {
+          console.error('❌ Sidebar not found after injection');
+          alert('TravelGuard: Error loading extension. Please try again.');
+        }
+      },
+      args: [destinations]
+    });
+    
+    console.log('✅ Sidebar opened with destinations');
+    
+  } catch (error) {
+    console.error('❌ Error opening sidebar with destinations:', error);
+    throw error;
+  }
+}
 
 /**
  * Initialize extension on first install

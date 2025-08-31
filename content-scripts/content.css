@@ -1249,3 +1249,699 @@
 
 /* Malaria Footer */
 /* Removed malaria footer styling */
+
+/* ========================================
+   SETTINGS OVERLAY
+   ======================================== */
+
+/* Settings Overlay */
+.th-settings-overlay {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  z-index: 1000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  backdrop-filter: blur(2px) !important;
+}
+
+.th-settings-overlay.hidden {
+  display: none !important;
+}
+
+.th-settings-modal {
+  background: #FFFFFF !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(6, 62, 84, 0.2) !important;
+  max-width: 100% !important;
+  width: 360px !important;
+  max-height: 90vh !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.th-settings-header {
+  background: #063E54 !important;
+  color: #FFFFFF !important;
+  padding: 20px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+}
+
+.th-settings-title h3 {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #FFFFFF !important;
+  margin: 0 0 4px 0 !important;
+  line-height: 1.3 !important;
+}
+
+.th-settings-title p {
+  font-size: 13px !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.th-settings-close {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #FFFFFF !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.th-settings-close:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.th-settings-content {
+  padding: 24px !important;
+  overflow-y: auto !important;
+  flex: 1 !important;
+}
+
+.th-settings-section {
+  margin-bottom: 24px !important;
+}
+
+.th-settings-section:last-child {
+  margin-bottom: 0 !important;
+}
+
+.th-settings-section h4 {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #063E54 !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1.3 !important;
+}
+
+.th-settings-desc {
+  font-size: 12px !important;
+  color: #666666 !important;
+  margin: 0 0 16px 0 !important;
+  line-height: 1.4 !important;
+}
+
+.th-setting-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  margin-bottom: 12px !important;
+}
+
+.th-setting-info {
+  flex: 1 !important;
+}
+
+.th-setting-label {
+  display: block !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #000000 !important;
+  margin-bottom: 2px !important;
+  line-height: 1.3 !important;
+}
+
+.th-setting-note {
+  display: block !important;
+  font-size: 11px !important;
+  color: #666666 !important;
+  line-height: 1.3 !important;
+}
+
+/* AI Test Section */
+.th-ai-test-section {
+  margin-top: 16px !important;
+  padding-top: 16px !important;
+  border-top: 1px solid #E0E0E0 !important;
+}
+
+.th-test-ai-btn {
+  width: 100% !important;
+  padding: 10px 16px !important;
+  background: #F8F9FA !important;
+  border: 1px solid #E0E0E0 !important;
+  color: #063E54 !important;
+  border-radius: 6px !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+
+.th-test-ai-btn:hover {
+  background: #E9ECEF !important;
+  border-color: #CED4DA !important;
+}
+
+.th-test-ai-btn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  background: #F8F9FA !important;
+}
+
+/* Requirements List */
+.th-requirements-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+.th-requirement-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 12px !important;
+  background: #F8F9FA !important;
+  border: 1px solid #E0E0E0 !important;
+  border-radius: 6px !important;
+}
+
+.th-req-icon {
+  font-size: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.th-req-text {
+  flex: 1 !important;
+  font-size: 12px !important;
+  color: #000000 !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+}
+
+.th-req-status {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  flex-shrink: 0 !important;
+}
+
+.th-req-status.th-req-good {
+  background: #E8F5E8 !important;
+  color: #2E7D32 !important;
+}
+
+.th-req-status.th-req-warning {
+  background: #FFF8E1 !important;
+  color: #F57C00 !important;
+}
+
+.th-req-status.th-req-bad {
+  background: #FFEBEE !important;
+  color: #C62828 !important;
+}
+
+/* Help Section */
+.th-help-content {
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}
+
+.th-help-content p {
+  margin: 0 0 12px 0 !important;
+  color: #000000 !important;
+}
+
+.th-help-steps {
+  margin: 12px 0 !important;
+  padding-left: 20px !important;
+  color: #000000 !important;
+}
+
+.th-help-steps li {
+  margin-bottom: 6px !important;
+  line-height: 1.4 !important;
+}
+
+.th-help-steps code {
+  background: #F8F9FA !important;
+  padding: 2px 4px !important;
+  border-radius: 3px !important;
+  font-family: monospace !important;
+  font-size: 11px !important;
+  color: #063E54 !important;
+  border: 1px solid #E0E0E0 !important;
+}
+
+.th-help-steps strong {
+  color: #063E54 !important;
+  font-weight: 600 !important;
+}
+
+.th-help-note {
+  margin-top: 16px !important;
+  padding: 12px !important;
+  background: #E8F5E8 !important;
+  border: 1px solid #C3E6C3 !important;
+  border-radius: 6px !important;
+  color: #2E7D32 !important;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+}
+
+/* Settings Toggle Switch */
+.th-toggle-switch {
+  position: relative !important;
+  display: inline-block !important;
+  width: 44px !important;
+  height: 24px !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+}
+
+.th-toggle-switch input {
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.th-toggle-slider {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-color: #ccc !important;
+  transition: .3s !important;
+  border-radius: 24px !important;
+  cursor: pointer !important;
+}
+
+.th-toggle-slider:before {
+  position: absolute !important;
+  content: "" !important;
+  height: 18px !important;
+  width: 18px !important;
+  left: 3px !important;
+  bottom: 3px !important;
+  background-color: white !important;
+  transition: .3s !important;
+  border-radius: 50% !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+}
+
+input:checked + .th-toggle-slider {
+  background-color: #063E54 !important;
+}
+
+input:checked + .th-toggle-slider:before {
+  transform: translateX(20px) !important;
+}
+
+input:disabled + .th-toggle-slider {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* AI Status Messages */
+.th-ai-status {
+  margin-top: 12px !important;
+}
+
+.th-ai-status-message {
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.th-ai-status-info {
+  background: #E7F3FF !important;
+  border: 1px solid #B3D9FF !important;
+  color: #0C5AA6 !important;
+}
+
+.th-ai-status-success {
+  background: #E8F5E8 !important;
+  border: 1px solid #C3E6C3 !important;
+  color: #2E7D32 !important;
+}
+
+.th-ai-status-warning {
+  background: #FFF8E1 !important;
+  border: 1px solid #FFE082 !important;
+  color: #F57C00 !important;
+}
+
+.th-ai-status-error {
+  background: #FFEBEE !important;
+  border: 1px solid #FFCDD2 !important;
+  color: #C62828 !important;
+}
+
+.th-ai-status-icon {
+  font-size: 14px !important;
+  flex-shrink: 0 !important;
+}
+
+.th-ai-status-info .th-ai-status-icon:before {
+  content: "ℹ️" !important;
+}
+
+.th-ai-status-success .th-ai-status-icon:before {
+  content: "✅" !important;
+}
+
+.th-ai-status-warning .th-ai-status-icon:before {
+  content: "⚠️" !important;
+}
+
+.th-ai-status-error .th-ai-status-icon:before {
+  content: "❌" !important;
+}
+
+.th-ai-status-text {
+  font-weight: 500 !important;
+}
+
+/* Settings Button Hover Effect */
+.th-settings-btn:hover {
+  transform: rotate(90deg) !important;
+}
+
+/* ========================================
+   AI SUMMARY FEATURES
+   ======================================== */
+
+/* AI Summary Controls */
+.th-ai-summary-controls {
+  margin-top: 16px !important;
+  padding: 12px 0 !important;
+  border-top: 1px solid #E0E0E0 !important;
+}
+
+.th-ai-summary-btn {
+  width: 100% !important;
+  padding: 12px 16px !important;
+  background: linear-gradient(135deg, #063E54 0%, #0A5A7A 100%) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  box-shadow: 0 2px 8px rgba(6, 62, 84, 0.2) !important;
+}
+
+.th-ai-summary-btn:hover {
+  background: linear-gradient(135deg, #0A5A7A 0%, #063E54 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(6, 62, 84, 0.3) !important;
+}
+
+.th-ai-summary-btn:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 6px rgba(6, 62, 84, 0.2) !important;
+}
+
+.th-ai-summary-btn:disabled {
+  opacity: 0.7 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: 0 2px 8px rgba(6, 62, 84, 0.1) !important;
+}
+
+.th-ai-icon {
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+
+.th-ai-text {
+  font-weight: 500 !important;
+}
+
+.th-ai-loading {
+  font-size: 16px !important;
+  animation: spin 1s linear infinite !important;
+}
+
+.th-ai-loading.hidden {
+  display: none !important;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* AI Summary Result Display - Matches country card format exactly */
+.th-ai-summary-result {
+  /* Inherits all styles from .th-country-result plus special styling */
+  border: 1px solid #E0E0E0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  margin-bottom: 24px !important;
+}
+
+.th-ai-summary-result .th-country-header {
+  /* Special gradient for AI header */
+  background: linear-gradient(135deg, #063E54 0%, #0A5A7A 100%) !important;
+  color: #FFFFFF !important;
+  padding: 12px 16px !important;
+  border-radius: 8px 8px 0 0 !important;
+  border-bottom: none !important;
+}
+
+.th-ai-summary-result .th-country-name {
+  color: #FFFFFF !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.th-ai-summary-result .th-country-expand-indicator {
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  margin-left: auto !important;
+}
+
+.th-ai-summary-result .th-ai-summary-icon {
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+
+.th-ai-summary-result .th-country-content {
+  background: #FFFFFF !important;
+  border-radius: 0 0 8px 8px !important;
+  border: none !important;
+  padding: 20px !important;
+}
+
+/* AI Summary Content Formatting */
+.th-ai-countries-header {
+  background: #F8F9FA !important;
+  border: 1px solid #E0E0E0 !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+  margin-bottom: 16px !important;
+  font-size: 14px !important;
+  color: #063E54 !important;
+}
+
+.th-ai-content h4 {
+  color: #063E54 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin: 0 0 8px 0 !important;
+  padding: 0 !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.th-ai-content ul {
+  margin: 0 0 16px 0 !important;
+  padding: 0 0 0 16px !important;
+  list-style: none !important;
+}
+
+.th-ai-content li {
+  position: relative !important;
+  margin: 0 0 4px 0 !important;
+  padding: 0 0 0 12px !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  color: #333333 !important;
+}
+
+.th-ai-content li:before {
+  content: "•" !important;
+  position: absolute !important;
+  left: 0 !important;
+  color: #063E54 !important;
+  font-weight: bold !important;
+}
+
+.th-section-spacing {
+  margin-bottom: 4px !important;
+}
+
+.th-ai-content p {
+  margin: 0 0 12px 0 !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  color: #333333 !important;
+}
+
+.th-ai-summary-text {
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  color: #000000 !important;
+  margin-bottom: 16px !important;
+}
+
+.th-ai-summary-text h1, 
+.th-ai-summary-text h2, 
+.th-ai-summary-text h3, 
+.th-ai-summary-text h4, 
+.th-ai-summary-text h5, 
+.th-ai-summary-text h6 {
+  color: #063E54 !important;
+  font-weight: 600 !important;
+  margin: 16px 0 8px 0 !important;
+}
+
+.th-ai-summary-text h1:first-child,
+.th-ai-summary-text h2:first-child,
+.th-ai-summary-text h3:first-child {
+  margin-top: 0 !important;
+}
+
+.th-ai-summary-text ul {
+  margin: 8px 0 16px 20px !important;
+  padding: 0 !important;
+}
+
+.th-ai-summary-text li {
+  margin-bottom: 6px !important;
+  color: #000000 !important;
+  line-height: 1.5 !important;
+}
+
+.th-ai-summary-text p {
+  margin-bottom: 12px !important;
+}
+
+.th-ai-summary-text strong {
+  color: #063E54 !important;
+  font-weight: 600 !important;
+}
+
+.th-ai-summary-disclaimer {
+  background: #FFF3CD !important;
+  border: 1px solid #FFEAA7 !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+  font-size: 12px !important;
+  color: #856404 !important;
+  line-height: 1.4 !important;
+}
+
+.th-ai-summary-disclaimer strong {
+  color: #856404 !important;
+  font-weight: 600 !important;
+}
+
+/* AI Error Display */
+.th-ai-error {
+  background: #FFEBEE !important;
+  border: 1px solid #FFCDD2 !important;
+  border-radius: 8px !important;
+  margin-bottom: 16px !important;
+  overflow: hidden !important;
+}
+
+.th-ai-error-content {
+  padding: 12px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.th-ai-error-icon {
+  font-size: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.th-ai-error-text {
+  flex: 1 !important;
+  font-size: 13px !important;
+  color: #C62828 !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+.th-ai-error-close {
+  background: transparent !important;
+  border: none !important;
+  color: #C62828 !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.th-ai-error-close:hover {
+  background: rgba(198, 40, 40, 0.1) !important;
+}
+
+/* AI Progress Bar */
+.th-ai-progress-bar {
+  width: 100% !important;
+  height: 6px !important;
+  background: #E0E7FF !important;
+  border-radius: 3px !important;
+  margin-top: 8px !important;
+  overflow: hidden !important;
+}
+
+.th-ai-progress-fill {
+  height: 100% !important;
+  background: linear-gradient(90deg, #4F46E5, #7C3AED) !important;
+  border-radius: 3px !important;
+  transition: width 0.3s ease !important;
+}

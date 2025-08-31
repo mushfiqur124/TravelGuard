@@ -14,7 +14,8 @@
     "storage",
     "background",
     "activeTab",
-    "scripting"
+    "scripting",
+    "contextMenus"
   ],
   
   "host_permissions": [

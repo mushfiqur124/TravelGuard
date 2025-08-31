@@ -9,6 +9,7 @@ class VaccinationSidebar {
     this.isMinimized = false;
     this.sidebarElement = null;
     this.selectedCountries = [];
+    this.lastCountriesKey = ''; // Track countries to prevent unnecessary AI summary clearing
     this.countryData = {};
     this.availableCountries = [];
     this.dataLoader = null;
@@ -837,12 +838,91 @@ class VaccinationSidebar {
               <span class="th-logo-text">TravelGuard</span>
         </div>
         <div class="th-header-controls">
+              <button class="th-control-btn th-settings-btn" id="th-settings-btn" title="Settings">⚙</button>
               <button class="th-control-btn th-refresh-btn" id="th-refresh-btn" title="Refresh Extension">↻</button>
               <button class="th-control-btn th-minimize-btn" id="th-minimize-btn" title="Minimize">−</button>
               <button class="th-control-btn th-close-btn" id="th-close-btn" title="Close">×</button>
       </div>
         </div>
       </div>
+      
+        <!-- Settings Overlay -->
+        <div class="th-settings-overlay hidden" id="th-settings-overlay">
+          <div class="th-settings-modal">
+            <div class="th-settings-header">
+              <div class="th-settings-title">
+                <h3>TravelGuard Settings</h3>
+                <p>Configure AI-powered features and preferences</p>
+              </div>
+              <button class="th-settings-close" id="th-settings-close" title="Close Settings">×</button>
+            </div>
+            <div class="th-settings-content">
+              <div class="th-settings-section">
+                <h4>AI-Powered Health Summaries</h4>
+                <p class="th-settings-desc">Generate consolidated health summaries when multiple countries are selected</p>
+                
+                <div class="th-setting-item">
+                  <div class="th-setting-info">
+                    <span class="th-setting-label">Enable AI Summaries</span>
+                    <span class="th-setting-note">Requires Chrome with built-in AI features</span>
+                  </div>
+                  <label class="th-toggle-switch">
+                    <input type="checkbox" id="th-ai-toggle">
+                    <span class="th-toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div class="th-ai-status" id="th-ai-status">
+                  <!-- AI status messages will appear here -->
+                </div>
+
+                <div class="th-ai-test-section" id="th-ai-test-section">
+                  <button class="th-test-ai-btn" id="th-test-ai-btn">🧪 Test AI Connection</button>
+                </div>
+              </div>
+
+              <div class="th-settings-section">
+                <h4>System Requirements</h4>
+                <div class="th-requirements-list">
+                  <div class="th-requirement-item">
+                    <span class="th-req-icon">💻</span>
+                    <span class="th-req-text">Chrome 128+ with AI features enabled</span>
+                    <span class="th-req-status" id="th-req-chrome">Checking...</span>
+                  </div>
+                  <div class="th-requirement-item">
+                    <span class="th-req-icon">🧠</span>
+                    <span class="th-req-text">AI model availability</span>
+                    <span class="th-req-status" id="th-req-model">Checking...</span>
+                  </div>
+                  <div class="th-requirement-item">
+                    <span class="th-req-icon">💾</span>
+                    <span class="th-req-text">Sufficient storage (22GB+)</span>
+                    <span class="th-req-status" id="th-req-storage">Unknown</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="th-settings-section" id="th-help-section">
+                <h4>Need Help Enabling AI Features?</h4>
+                <div class="th-help-content">
+                  <p><strong>If AI features aren't working:</strong></p>
+                  <ol class="th-help-steps">
+                    <li>Use <strong>Chrome Dev/Canary</strong> or Chrome 128+</li>
+                    <li>Go to <code>chrome://flags/</code></li>
+                    <li>Search for "Prompt API for Gemini Nano"</li>
+                    <li>Set it to <strong>Enabled</strong></li>
+                    <li>Search for "Optimization Guide On Device Model"</li>
+                    <li>Set it to <strong>Enabled BypassPerfRequirement</strong></li>
+                    <li><strong>Restart Chrome</strong></li>
+                    <li>Come back and try enabling AI summaries</li>
+                  </ol>
+                  <p class="th-help-note">💡 The AI model will download automatically (about 22GB) when you first enable the feature.</p>
+                  <p class="th-help-note">🔧 <strong>For Developers:</strong> No signup required for local testing! Origin trial registration only needed when publishing to Chrome Web Store.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       
         <!-- Instructions -->
         <div class="th-instructions">
@@ -933,6 +1013,34 @@ class VaccinationSidebar {
     expandBtn?.addEventListener('click', () => {
       console.log('📈 Expand button clicked');
       this.expandSidebar();
+    });
+
+    // Settings button
+    const settingsBtn = this.sidebarElement.querySelector('#th-settings-btn');
+    settingsBtn?.addEventListener('click', () => {
+      console.log('⚙️ Settings button clicked');
+      this.toggleSettingsPanel();
+    });
+
+    // Settings close button
+    const settingsClose = this.sidebarElement.querySelector('#th-settings-close');
+    settingsClose?.addEventListener('click', () => {
+      console.log('❌ Settings close clicked');
+      this.toggleSettingsPanel();
+    });
+
+    // AI toggle
+    const aiToggle = this.sidebarElement.querySelector('#th-ai-toggle');
+    aiToggle?.addEventListener('change', (e) => {
+      console.log('🤖 AI toggle changed:', e.target.checked);
+      this.handleAiToggle(e.target.checked);
+    });
+
+    // Test AI button
+    const testAiBtn = this.sidebarElement.querySelector('#th-test-ai-btn');
+    testAiBtn?.addEventListener('click', () => {
+      console.log('🧪 Test AI button clicked');
+      this.testAiConnection();
     });
 
     // Country search input
@@ -1300,28 +1408,181 @@ class VaccinationSidebar {
     await this.updateResults();
   }
 
+  /**
+   * Search for multiple destinations from context menu
+   */
+  async searchMultipleDestinations(destinations) {
+    console.log('🎯 Searching multiple destinations:', destinations);
+    
+    if (!destinations || !Array.isArray(destinations) || destinations.length === 0) {
+      console.warn('⚠️ No destinations provided');
+      return;
+    }
+    
+    // Clear any existing selections first
+    this.selectedCountries = [];
+    this.updateSelectedCountries();
+    
+    // Load available countries if not already loaded
+    if (!this.availableCountries || this.availableCountries.length === 0) {
+      await this.loadAvailableCountries();
+    }
+    
+    const foundCountries = [];
+    const notFoundDestinations = [];
+    
+    for (const destination of destinations) {
+      // Try exact match first
+      const exactMatch = this.availableCountries.find(country => 
+        country.toLowerCase() === destination.toLowerCase()
+      );
+      
+      if (exactMatch) {
+        foundCountries.push(exactMatch);
+        console.log(`✅ Found exact match: "${destination}" -> "${exactMatch}"`);
+      } else {
+        // Try partial match
+        const partialMatch = this.availableCountries.find(country => 
+          country.toLowerCase().includes(destination.toLowerCase()) ||
+          destination.toLowerCase().includes(country.toLowerCase())
+        );
+        
+        if (partialMatch) {
+          foundCountries.push(partialMatch);
+          console.log(`✅ Found partial match: "${destination}" -> "${partialMatch}"`);
+        } else {
+          notFoundDestinations.push(destination);
+          console.log(`❌ No match found for: "${destination}"`);
+        }
+      }
+    }
+    
+    // Add all found countries
+    for (const country of foundCountries) {
+      if (!this.selectedCountries.includes(country)) {
+        this.selectedCountries.push(country);
+      }
+    }
+    
+    // Update UI
+    this.updateSelectedCountries();
+    await this.updateResults();
+    
+    // Show status message
+    const statusMessages = [];
+    if (foundCountries.length > 0) {
+      statusMessages.push(`Found vaccination info for: ${foundCountries.join(', ')}`);
+    }
+    if (notFoundDestinations.length > 0) {
+      statusMessages.push(`Could not find: ${notFoundDestinations.join(', ')}`);
+    }
+    
+    if (statusMessages.length > 0) {
+      this.showStatusMessage(statusMessages.join('\n\n'), notFoundDestinations.length > 0 ? 'warning' : 'success');
+    }
+    
+    console.log(`🎯 Search complete. Found: ${foundCountries.length}, Not found: ${notFoundDestinations.length}`);
+  }
+  
+  /**
+   * Show a status message to the user
+   */
+  showStatusMessage(message, type = 'info') {
+    const existingMessage = this.sidebarElement.querySelector('.th-status-message');
+    if (existingMessage) {
+      existingMessage.remove();
+    }
+    
+    const messageElement = document.createElement('div');
+    messageElement.className = `th-status-message th-status-${type}`;
+    messageElement.style.cssText = `
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      line-height: 1.4;
+      white-space: pre-line;
+      background: ${type === 'success' ? '#d4edda' : type === 'warning' ? '#fff3cd' : '#d1ecf1'};
+      border: 1px solid ${type === 'success' ? '#c3e6cb' : type === 'warning' ? '#ffeaa7' : '#bee5eb'};
+      color: ${type === 'success' ? '#155724' : type === 'warning' ? '#856404' : '#0c5460'};
+    `;
+    messageElement.textContent = message;
+    
+    // Add close button
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '×';
+    closeButton.style.cssText = `
+      float: right;
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      color: inherit;
+      margin-left: 10px;
+    `;
+    closeButton.addEventListener('click', () => messageElement.remove());
+    messageElement.appendChild(closeButton);
+    
+    // Insert after the header
+    const header = this.sidebarElement.querySelector('.th-header');
+    if (header && header.nextSibling) {
+      header.parentNode.insertBefore(messageElement, header.nextSibling);
+    }
+    
+    // Auto-remove after 8 seconds
+    setTimeout(() => {
+      if (messageElement.parentNode) {
+        messageElement.remove();
+      }
+    }, 8000);
+  }
+
   updateSelectedCountries() {
     const container = this.sidebarElement.querySelector('#th-selected-countries');
     if (!container) return;
 
+    // Only clear AI summary if countries actually changed (not just UI updates)
+    const currentCountriesKey = this.selectedCountries.sort().join(',');
+    if (this.lastCountriesKey !== currentCountriesKey) {
+      this.clearAiSummary();
+      this.lastCountriesKey = currentCountriesKey;
+    }
+
     if (this.selectedCountries.length === 0) {
       container.innerHTML = '';
+      // Also remove any AI summary button from results container
+      this.removeAiSummaryButton();
       return;
+    }
+
+    // Smart AI button logic
+    if (this.selectedCountries.length > 1) {
+      // Multiple countries - check if AI is enabled and show button
+      chrome.storage.local.get(['aiSummaryEnabled']).then(result => {
+        const isAiEnabled = result.aiSummaryEnabled || false;
+        if (isAiEnabled) {
+          this.showAiButton();
+        }
+      });
+    } else {
+      // Only 1 country - remove AI button
+      this.removeAiSummaryButton();
     }
 
     container.innerHTML = `
       <div class="th-selected-header">
         <span class="th-selected-title">Selected Destinations (${this.selectedCountries.length})</span>
-                </div>
+      </div>
       <div class="th-selected-list">
         ${this.selectedCountries.map(country => `
           <div class="th-selected-item">
             <span class="th-selected-name">${country}</span>
             <button class="th-selected-remove" data-country="${country}" title="Remove ${country}">×</button>
-              </div>
-            `).join('')}
           </div>
-        `;
+        `).join('')}
+      </div>
+    `;
 
     // Add remove handlers
     container.querySelectorAll('.th-selected-remove').forEach(btn => {
@@ -1332,6 +1593,9 @@ class VaccinationSidebar {
         this.removeCountry(country);
       });
     });
+
+    // Expand all country cards when countries change
+    this.expandAllCountryCards();
   }
   
   generateCountryResults(country) {
@@ -1737,6 +2001,880 @@ class VaccinationSidebar {
     console.log(`✅ Added country collapse listeners to ${countryHeaders.length} country headers`);
   }
 
+  // Helper function to remove any existing AI summary button
+  removeAiSummaryButton() {
+    const existingButton = this.sidebarElement?.querySelector('.th-ai-summary-controls');
+    if (existingButton) {
+      existingButton.remove();
+    }
+  }
+
+  // Settings Overlay Management
+  toggleSettingsPanel() {
+    const settingsOverlay = this.sidebarElement.querySelector('#th-settings-overlay');
+    if (!settingsOverlay) return;
+
+    const isHidden = settingsOverlay.classList.contains('hidden');
+    
+    if (isHidden) {
+      settingsOverlay.classList.remove('hidden');
+      // Load current AI settings when opening
+      this.loadAiSettings();
+      // Check system requirements
+      this.checkSystemRequirements();
+    } else {
+      settingsOverlay.classList.add('hidden');
+    }
+  }
+
+  async loadAiSettings() {
+    try {
+      const { aiSummaryEnabled } = await chrome.storage.local.get(['aiSummaryEnabled']);
+      const aiToggle = this.sidebarElement.querySelector('#th-ai-toggle');
+      
+      if (aiToggle) {
+        aiToggle.checked = aiSummaryEnabled || false;
+      }
+
+      // Check AI model status
+      await this.checkAiModelStatus();
+      
+    } catch (error) {
+      console.error('Error loading AI settings:', error);
+      this.showAiStatus('error', 'Failed to load AI settings');
+    }
+  }
+
+  async handleAiToggle(isEnabled) {
+    const aiToggle = this.sidebarElement.querySelector('#th-ai-toggle');
+    
+    try {
+      if (isEnabled) {
+        // Disable toggle during setup
+        if (aiToggle) aiToggle.disabled = true;
+        
+        this.showAiStatus('info', 'Enabling AI summaries...');
+
+        // Check AI availability
+        const aiCheck = await this.checkAiAvailability();
+        
+        if (!aiCheck.supported) {
+          throw new Error(aiCheck.error || 'AI features not supported on this device');
+        }
+
+        if (aiCheck.needsDownload && !aiCheck.downloading) {
+          this.showAiStatus('info', 'Downloading AI model... This may take several minutes.');
+          
+          try {
+            // Get the AI API reference
+            const aiAPI = await this.getAiAPI();
+            if (!aiAPI) {
+              throw new Error('AI API not available');
+            }
+            
+            // Capture 'this' context for the callback
+            const self = this;
+            
+            // Trigger download by creating session with progress monitoring using CORRECT API
+            console.log('📥 Using CORRECT API: LanguageModel.create()...');
+            
+            const session = await aiAPI.create({
+              temperature: 0.1, // Very low temperature to prevent hallucinations
+              topK: 3, // Low topK for more deterministic output
+              language: 'en', // Specify English language
+              monitor(m) {
+                console.log('📥 Setting up download monitor...');
+                m.addEventListener('downloadprogress', (e) => {
+                  console.log('📥 Download progress:', e.loaded, '/', e.total);
+                  const percent = Math.round((e.loaded / e.total) * 100);
+                  self.showAiStatus('info', `Downloading AI model... ${percent}%`, percent);
+                });
+              }
+            });
+            
+            console.log('✅ AI session created successfully');
+            
+            // Test the session works
+            await session.prompt('Test prompt');
+            session.destroy();
+            
+            this.showAiStatus('success', 'AI model downloaded and ready!');
+          } catch (downloadError) {
+            console.error('Download error details:', downloadError);
+            throw new Error(`Failed to download AI model: ${downloadError.message}`);
+          }
+        } else if (aiCheck.downloading) {
+          this.showAiStatus('info', 'AI model download in progress... Please wait.');
+          // Save enabled state anyway - the download is happening
+          await chrome.storage.local.set({ aiSummaryEnabled: true });
+        } else {
+          this.showAiStatus('success', 'AI summaries enabled!');
+        }
+
+        // Save enabled state
+        await chrome.storage.local.set({ aiSummaryEnabled: true });
+        
+      } else {
+        // Save disabled state
+        await chrome.storage.local.set({ aiSummaryEnabled: false });
+        this.showAiStatus('info', 'AI summaries disabled');
+      }
+      
+    } catch (error) {
+      console.error('AI toggle error:', error);
+      this.showAiStatus('error', error.message || 'Failed to enable AI summaries');
+      
+      // Revert toggle state
+      if (aiToggle) {
+        aiToggle.checked = false;
+        await chrome.storage.local.set({ aiSummaryEnabled: false });
+      }
+    } finally {
+      // Re-enable toggle
+      if (aiToggle) aiToggle.disabled = false;
+    }
+  }
+
+  async getAiAPI() {
+    // Search for the CORRECT Chrome Prompt API - LanguageModel
+    console.log('🔍 Searching for Chrome Prompt API...');
+    console.log('🔍 Current URL:', window.location.href);
+    console.log('🔍 Is HTTPS:', window.location.protocol === 'https:');
+    console.log('🔍 Is secure context:', window.isSecureContext);
+    console.log('🔍 User agent:', navigator.userAgent);
+    
+    // Check for CORRECT API: LanguageModel (from Chrome docs)
+    console.log('🔍 LanguageModel exists:', typeof LanguageModel !== 'undefined');
+    console.log('🔍 window.LanguageModel exists:', typeof window.LanguageModel !== 'undefined');
+    console.log('🔍 globalThis.LanguageModel exists:', typeof globalThis.LanguageModel !== 'undefined');
+    
+    // Method 1: Direct LanguageModel access
+    if (typeof LanguageModel !== 'undefined') {
+      console.log('✅ Found LanguageModel (CORRECT API)');
+      console.log('🔍 LanguageModel methods:', Object.getOwnPropertyNames(LanguageModel));
+      return LanguageModel;
+    }
+    
+    // Method 2: window.LanguageModel
+    if (typeof window !== 'undefined' && typeof window.LanguageModel !== 'undefined') {
+      console.log('✅ Found window.LanguageModel');
+      return window.LanguageModel;
+    }
+    
+    // Method 3: globalThis.LanguageModel
+    if (typeof globalThis !== 'undefined' && typeof globalThis.LanguageModel !== 'undefined') {
+      console.log('✅ Found globalThis.LanguageModel');
+      return globalThis.LanguageModel;
+    }
+    
+    // Legacy check for window.ai (in case it still exists)
+    if (window.ai) {
+      console.log('🔍 window.ai exists (legacy), properties:', Object.getOwnPropertyNames(window.ai));
+    }
+    
+    console.log('❌ No LanguageModel API found');
+    console.log('❌ Available globals:', Object.getOwnPropertyNames(window).slice(0, 20), '...(truncated)');
+    
+    // Security context check
+    if (!window.isSecureContext) {
+      console.log('⚠️  WARNING: Not in secure context - AI API requires HTTPS');
+    }
+    
+    return null;
+  }
+
+  async checkAiAvailability() {
+    console.log('🔍 Checking AI availability...');
+    console.log('🌐 Current URL:', window.location.href);
+    console.log('🔍 Available window properties:', Object.getOwnPropertyNames(window).filter(prop => prop.toLowerCase().includes('ai')));
+    
+    // Debug what's available
+    console.log('🔍 Checking window.ai:', typeof window.ai);
+    console.log('🔍 Checking window.chrome:', typeof window.chrome);
+    console.log('🔍 Checking globalThis.ai:', typeof globalThis.ai);
+    
+    const aiAPI = await this.getAiAPI();
+    
+    if (!aiAPI) {
+      console.log('❌ No AI API found');
+      return { 
+        supported: false, 
+        error: 'Chrome AI features not detected. Please:\n1. Use Chrome 128+ or Chrome Dev/Canary\n2. Go to chrome://flags/ and enable "Prompt API for Gemini Nano"\n3. Restart Chrome\n4. Ensure you have sufficient hardware (4GB+ GPU memory)' 
+      };
+    }
+
+    try {
+      // Use CORRECT Chrome Prompt API method: LanguageModel.availability()
+      console.log('🔍 Checking API methods available:', Object.getOwnPropertyNames(aiAPI));
+      
+      let capabilities = null;
+      
+      // CORRECT API: LanguageModel.availability()
+      if (typeof aiAPI.availability === 'function') {
+        console.log('🔍 Using CORRECT API: LanguageModel.availability()...');
+        capabilities = await aiAPI.availability();
+        console.log('📋 LanguageModel.availability() result:', capabilities);
+      } else {
+        console.log('🔍 Available methods on LanguageModel:', Object.getOwnPropertyNames(aiAPI));
+        console.log('🔍 Available prototype methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(aiAPI)));
+        throw new Error('LanguageModel.availability() method not found - Chrome Prompt API not properly enabled');
+      }
+      
+      console.log('📋 AI availability result:', capabilities);
+      console.log('📋 AI availability type:', typeof capabilities);
+      
+      // From Chrome docs, availability() returns: "unavailable", "downloadable", "downloading", or "available"
+      const availabilityStatus = capabilities;
+      
+      console.log('📋 Final availability status:', availabilityStatus);
+      
+      // Handle status values according to Chrome documentation
+      if (availabilityStatus === 'unavailable') {
+        return { 
+          supported: false, 
+          error: 'AI model not supported on this device. Requires:\n• Windows 10+, macOS 13+, or Linux\n• 22GB+ free storage\n• 4GB+ GPU memory\n• Unmetered network connection' 
+        };
+      }
+      
+      if (availabilityStatus === 'downloadable') {
+        console.log('📦 Model available but needs download');
+        return { supported: true, needsDownload: true };
+      }
+      
+      if (availabilityStatus === 'downloading') {
+        console.log('⏳ Model download in progress');
+        return { supported: true, needsDownload: true, downloading: true };
+      }
+      
+      if (availabilityStatus === 'available') {
+        console.log('✅ Model ready to use');
+        return { supported: true, needsDownload: false };
+      }
+      
+      return { supported: false, error: `Unknown availability status: ${availabilityStatus}` };
+      
+    } catch (error) {
+      console.error('❌ Error checking AI capabilities:', error);
+      console.error('❌ Error stack:', error.stack);
+      return { 
+        supported: false, 
+        error: `Failed to check AI capabilities: ${error.message}\n\nEnsure Chrome flags are enabled:\n1. chrome://flags/#prompt-api-for-gemini-nano = Enabled\n2. chrome://flags/#optimization-guide-on-device-model = Enabled BypassPerfRequirement\n3. Restart Chrome completely` 
+      };
+    }
+  }
+
+  async checkAiModelStatus() {
+    try {
+      const aiCheck = await this.checkAiAvailability();
+      
+      if (!aiCheck.supported) {
+        this.showAiStatus('error', aiCheck.error);
+      } else if (aiCheck.downloading) {
+        this.showAiStatus('info', 'AI model downloading in progress...');
+      } else if (aiCheck.needsDownload) {
+        this.showAiStatus('warning', 'AI model available but needs download');
+      } else {
+        this.showAiStatus('success', 'AI model ready');
+      }
+      
+    } catch (error) {
+      console.error('AI status check error:', error);
+      this.showAiStatus('warning', 'Unable to check AI status');
+    }
+  }
+
+  async testAiConnection() {
+    const testBtn = this.sidebarElement.querySelector('#th-test-ai-btn');
+    
+    try {
+      if (testBtn) {
+        testBtn.disabled = true;
+        testBtn.textContent = '🔄 Testing...';
+      }
+
+      console.log('🧪 Testing AI connection...');
+      
+      const aiCheck = await this.checkAiAvailability();
+      
+      if (!aiCheck.supported) {
+        throw new Error(aiCheck.error);
+      }
+
+      if (aiCheck.needsDownload) {
+        throw new Error('AI model needs to be downloaded first. Please enable AI summaries to download.');
+      }
+
+      // Test actual AI functionality
+      this.showAiStatus('info', 'Testing AI response...');
+      
+      const aiAPI = await this.getAiAPI();
+      if (!aiAPI) {
+        throw new Error('AI API not available');
+      }
+      
+      // Create session using CORRECT API: LanguageModel.create()
+      console.log('🧪 Creating test session using LanguageModel.create()...');
+      const session = await aiAPI.create({
+        temperature: 0.1, // Very low temperature to prevent hallucinations
+        topK: 3, // Low topK for more deterministic output
+        language: 'en' // Specify English language
+      });
+      
+      const testResponse = await session.prompt('Say "Hello from TravelGuard AI!" and nothing else.');
+      session.destroy();
+
+      console.log('🧪 Test response:', testResponse);
+      
+      this.showAiStatus('success', `AI test successful! Response: "${testResponse.trim()}"`);
+      
+    } catch (error) {
+      console.error('🧪 AI test failed:', error);
+      this.showAiStatus('error', `AI test failed: ${error.message}`);
+    } finally {
+      if (testBtn) {
+        testBtn.disabled = false;
+        testBtn.textContent = '🧪 Test AI Connection';
+      }
+    }
+  }
+
+  async checkSystemRequirements() {
+    // Check Chrome version and AI support
+    const chromeStatus = this.sidebarElement.querySelector('#th-req-chrome');
+    const modelStatus = this.sidebarElement.querySelector('#th-req-model');
+    
+    try {
+      // Check AI availability
+      const aiCheck = await this.checkAiAvailability();
+      console.log('🔍 System requirements check result:', aiCheck);
+      
+      if (aiCheck.supported) {
+        if (chromeStatus) {
+          chromeStatus.textContent = '✅ Supported';
+          chromeStatus.className = 'th-req-status th-req-good';
+        }
+        
+        if (aiCheck.downloading) {
+          if (modelStatus) {
+            modelStatus.textContent = '⏳ Downloading...';
+            modelStatus.className = 'th-req-status th-req-warning';
+          }
+        } else if (aiCheck.needsDownload) {
+          if (modelStatus) {
+            modelStatus.textContent = '⬬ Available (needs download)';
+            modelStatus.className = 'th-req-status th-req-warning';
+          }
+        } else {
+          if (modelStatus) {
+            modelStatus.textContent = '✅ Ready';
+            modelStatus.className = 'th-req-status th-req-good';
+          }
+        }
+      } else {
+        if (chromeStatus) {
+          chromeStatus.textContent = '❌ Not supported';
+          chromeStatus.className = 'th-req-status th-req-bad';
+        }
+        if (modelStatus) {
+          modelStatus.textContent = '❌ Unavailable';
+          modelStatus.className = 'th-req-status th-req-bad';
+        }
+      }
+      
+    } catch (error) {
+      console.error('System requirements check failed:', error);
+      if (chromeStatus) {
+        chromeStatus.textContent = '❓ Unknown';
+        chromeStatus.className = 'th-req-status';
+      }
+      if (modelStatus) {
+        modelStatus.textContent = '❓ Unknown';
+        modelStatus.className = 'th-req-status';
+      }
+    }
+  }
+
+  showAiStatus(type, message, progressPercent = null) {
+    const statusContainer = this.sidebarElement.querySelector('#th-ai-status');
+    if (!statusContainer) return;
+
+    // Remove existing status
+    statusContainer.innerHTML = '';
+
+    let progressBarHTML = '';
+    if (progressPercent !== null && type === 'info') {
+      progressBarHTML = `
+        <div class="th-ai-progress-bar">
+          <div class="th-ai-progress-fill" style="width: ${progressPercent}%"></div>
+        </div>
+      `;
+    }
+
+    const statusHTML = `
+      <div class="th-ai-status-message th-ai-status-${type}">
+        <span class="th-ai-status-icon"></span>
+        <span class="th-ai-status-text">${message}</span>
+        ${progressBarHTML}
+      </div>
+    `;
+
+    statusContainer.innerHTML = statusHTML;
+  }
+
+  showAiButton() {
+    const container = this.sidebarElement.querySelector('#th-selected-countries');
+    if (!container) return;
+
+    // Remove any existing AI button first
+    this.removeAiSummaryButton();
+
+    // Create AI button
+    const aiButtonHTML = `
+      <div class="th-ai-summary-controls">
+        <button class="th-ai-summary-btn" id="th-ai-summary-btn">
+          <span class="th-ai-icon">✨</span>
+          <span class="th-ai-text">Generate AI Summary</span>
+          <span class="th-ai-loading hidden">⏳</span>
+        </button>
+      </div>
+    `;
+
+    // Append to container
+    container.insertAdjacentHTML('beforeend', aiButtonHTML);
+
+    // Add event listener
+    const aiBtn = container.querySelector('#th-ai-summary-btn');
+    if (aiBtn) {
+      aiBtn.addEventListener('click', () => this.handleAiSummary());
+    }
+  }
+
+  // Main AI Summary Handler
+  async handleAiSummary() {
+    console.log('🤖 Handling AI Summary request...');
+    
+    const aiBtn = this.sidebarElement.querySelector('#th-ai-summary-btn');
+    const aiIcon = aiBtn?.querySelector('.th-ai-icon');
+    const aiText = aiBtn?.querySelector('.th-ai-text');
+    const aiLoading = aiBtn?.querySelector('.th-ai-loading');
+
+    try {
+      // Step 1: Check prerequisites
+      const { aiSummaryEnabled } = await chrome.storage.local.get(['aiSummaryEnabled']);
+      
+      if (!aiSummaryEnabled) {
+        this.showAiError('AI summaries are not enabled. Please enable them in settings first.');
+        return;
+      }
+
+      // Check AI availability
+      const aiCheck = await this.checkAiAvailability();
+      
+      if (!aiCheck.supported) {
+        this.showAiError(`AI not available: ${aiCheck.error}`);
+        return;
+      }
+
+      if (aiCheck.needsDownload) {
+        this.showAiError('AI model needs to be downloaded first. Please go to settings and enable AI summaries to download the model.');
+        return;
+      }
+
+      // Step 2: Show loading state
+      this.showAiLoading(aiBtn, aiIcon, aiText, aiLoading, 'Gathering country data...');
+
+      // Step 3: Gather data from country cards
+      const combinedHealthData = this.gatherCountryHealthData();
+      
+      if (!combinedHealthData) {
+        this.showAiError('No health data found to summarize. Please ensure countries are loaded.');
+        return;
+      }
+
+      // Step 4: Generate AI summary
+      this.showAiLoading(aiBtn, aiIcon, aiText, aiLoading, 'Generating AI summary...');
+      
+      const aiAPI = await this.getAiAPI();
+      if (!aiAPI) {
+        throw new Error('AI API not available');
+      }
+      
+      const prompt = this.buildAiPrompt(combinedHealthData);
+      
+      // Create session using CORRECT API: LanguageModel.create()
+      console.log('🤖 Creating AI session using LanguageModel.create()...');
+      const session = await aiAPI.create({
+        temperature: 0.1, // Very low temperature to prevent hallucinations
+        topK: 3, // Low topK for more deterministic output
+        language: 'en' // Specify English language
+      });
+      
+      const summary = await session.prompt(prompt);
+      
+      // Clean up the session
+      session.destroy();
+
+      console.log('✅ AI summary received. Length:', summary?.length);
+      console.log('📄 Full AI summary:', summary);
+
+      // Step 5: Display results
+      if (summary && summary.trim().length > 0) {
+        console.log('🚀 About to call displayAiSummary with summary:', summary.substring(0, 100) + '...');
+        this.displayAiSummary(summary);
+        console.log('🏁 displayAiSummary call completed');
+      } else {
+        console.error('❌ AI returned empty or invalid response:', summary);
+        throw new Error('AI returned empty response');
+      }
+      // Note: Don't reset button here since displayAiSummary() hides it
+
+    } catch (error) {
+      console.error('AI Summary error:', error);
+      this.showAiError(error.message || 'Failed to generate AI summary');
+      this.resetAiButton(aiBtn, aiIcon, aiText, aiLoading);
+      // Show the button again since there was an error
+      this.showAiSummaryButtonIfNeeded();
+    }
+  }
+
+  showAiLoading(aiBtn, aiIcon, aiText, aiLoading, message) {
+    if (aiBtn) aiBtn.disabled = true;
+    if (aiIcon) aiIcon.style.display = 'none';
+    if (aiLoading) aiLoading.classList.remove('hidden');
+    if (aiText) aiText.textContent = message;
+  }
+
+  resetAiButton(aiBtn, aiIcon, aiText, aiLoading) {
+    if (aiBtn) aiBtn.disabled = false;
+    if (aiIcon) aiIcon.style.display = 'inline';
+    if (aiLoading) aiLoading.classList.add('hidden');
+    if (aiText) aiText.textContent = 'Generate AI Summary';
+  }
+
+  gatherCountryHealthData() {
+    const resultsContainer = this.sidebarElement.querySelector('.th-results-content');
+    if (!resultsContainer) return null;
+
+    const countryCards = resultsContainer.querySelectorAll('.th-country-result');
+    if (!countryCards.length) return null;
+
+    let combinedData = '';
+    
+    countryCards.forEach(card => {
+      const countryHeader = card.querySelector('.th-country-header, .th-country-name');
+      const countryName = countryHeader?.textContent?.trim() || 'Unknown Country';
+      
+      combinedData += `\n--- HEALTH DATA FOR ${countryName.toUpperCase()} ---\n`;
+      
+      // Extract all text content from the card, excluding headers and buttons
+      const cardText = card.innerText
+        .replace(/×/g, '') // Remove close buttons
+        .replace(/▼|▲|▶/g, '') // Remove expand/collapse indicators
+        .replace(/\s+/g, ' ') // Normalize whitespace
+        .trim();
+      
+      combinedData += cardText + '\n';
+    });
+
+    return combinedData;
+  }
+
+  buildAiPrompt(healthData) {
+    // Extract country names from the health data
+    const countryMatches = healthData.match(/--- HEALTH DATA FOR ([A-Z\s]+) ---/g);
+    const countries = countryMatches ? 
+      countryMatches.map(match => 
+        match.replace(/--- HEALTH DATA FOR ([A-Z\s]+) ---/, '$1').trim()
+      ).join(' and ') : 'your destinations';
+
+    return `Create a combined travel health summary for a pharmacy patient traveling to ${countries}. Use the official health data below and format with clear headings and bullet points.
+
+--- BEGIN HEALTH DATA ---
+${healthData}
+--- END HEALTH DATA ---
+
+Format your response exactly as follows:
+
+**Essential Vaccinations**
+• [List vaccines recommended for most travelers, include country names in brackets when specific to certain countries]
+
+**Risk-Based Vaccinations** 
+• [List conditional vaccines with brief criteria, add country names only when not obvious from context]
+
+**Malaria Information**
+• [State malaria risk and antimalarial recommendations with country specificity, or "No malaria risk information available"]
+
+**Other Health Risks**
+• [List other key diseases/risks with country attribution where relevant]
+
+**INSTRUCTIONS:**
+- Only add country names in square brackets [Country Name] when the text doesn't already mention the country
+- If the text already says "Iran" or "Andorra" etc., don't add brackets
+- If a recommendation applies to all countries, don't add brackets
+- If different countries have different risk levels, specify each country separately
+- Use bullet points only
+- Keep each bullet point concise (1-2 lines max)
+- Only include information explicitly in the provided data
+- Focus on practical pharmacy counseling information
+- Don't explain diseases - just list them briefly`;
+  }
+
+  displayAiSummary(summary) {
+    console.log('🎯 displayAiSummary called with summary length:', summary?.length);
+    
+    // Target the th-results-content container instead of th-results to avoid being wiped by updateResults()
+    const resultsContainer = this.sidebarElement.querySelector('.th-results-content');
+    console.log('🔍 Results content container found:', !!resultsContainer);
+    
+    if (!resultsContainer) {
+      console.error('❌ Results content container not found!');
+      return;
+    }
+
+    // Get the countries for the title
+    const countryNames = this.selectedCountries.length > 0 ? 
+      this.selectedCountries.join(' & ') : 'Selected Destinations';
+    console.log('🌍 Countries for title:', countryNames);
+
+    // Debug the results container visibility
+    const containerStyle = getComputedStyle(resultsContainer);
+    console.log('📊 Results container debug:', {
+      display: containerStyle.display,
+      visibility: containerStyle.visibility,
+      opacity: containerStyle.opacity,
+      width: resultsContainer.offsetWidth,
+      height: resultsContainer.offsetHeight,
+      scrollHeight: resultsContainer.scrollHeight,
+      position: containerStyle.position,
+      overflow: containerStyle.overflow
+    });
+
+    // Remove any existing AI summary
+    const existingSummary = resultsContainer.querySelector('.th-ai-summary-result');
+    if (existingSummary) {
+      console.log('🗑️ Removing existing AI summary');
+      existingSummary.remove();
+    }
+
+    // Hide the Generate AI Summary button
+    console.log('🔽 Hiding AI summary button');
+    this.hideAiSummaryButton();
+
+    // Collapse all other country cards (temporarily disabled for debugging)
+    console.log('📊 Skipping collapse for debugging');
+    // this.collapseAllCountryCards();
+
+    // Format the summary first and log it
+    const formattedSummary = this.formatAiSummary(summary);
+    console.log('📝 Formatted summary HTML:', formattedSummary);
+
+    // Create AI summary in exact country card format
+    const summaryHTML = `
+      <div class="th-country-result th-ai-summary-result th-country-expandable th-country-expanded">
+        <div class="th-country-header th-country-clickable">
+          <h3 class="th-country-name">
+            <span class="th-ai-summary-icon">✨</span>
+            Travel Health Summary
+          </h3>
+          <span class="th-country-expand-indicator">▲</span>
+        </div>
+        <div class="th-country-content">
+          <div class="th-ai-summary-text">
+            <div class="th-ai-countries-header">
+              <strong>Destinations: ${countryNames}</strong>
+            </div>
+            ${formattedSummary}
+          </div>
+        </div>
+      </div>
+    `;
+
+    console.log('🏗️ About to insert HTML:', summaryHTML.substring(0, 200) + '...');
+
+    resultsContainer.insertAdjacentHTML('afterbegin', summaryHTML);
+    
+    // Verify the element was actually inserted
+    const insertedElement = resultsContainer.querySelector('.th-ai-summary-result');
+    console.log('✅ AI summary element inserted successfully:', !!insertedElement);
+    
+    if (insertedElement) {
+      console.log('📊 Element classes:', insertedElement.className);
+      console.log('📐 Element visibility:', getComputedStyle(insertedElement).display);
+      console.log('📏 Element dimensions:', {
+        width: insertedElement.offsetWidth,
+        height: insertedElement.offsetHeight,
+        clientHeight: insertedElement.clientHeight
+      });
+    } else {
+      console.error('❌ AI summary element NOT found after insertion!');
+    }
+
+    // Scroll to top to show the summary
+    resultsContainer.scrollTop = 0;
+    
+    console.log('🎯 displayAiSummary completed');
+  }
+
+  formatAiSummary(summary) {
+    console.log('🔄 Formatting AI summary. Length:', summary?.length, 'Content preview:', summary?.substring(0, 100));
+    
+    if (!summary || summary.trim().length === 0) {
+      console.error('❌ Empty AI summary received');
+      return '<div class="th-ai-content"><p>No summary generated</p></div>';
+    }
+    
+    // Split into lines and process each line
+    const lines = summary.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+    let formatted = '';
+    let inList = false;
+    
+    for (let line of lines) {
+      // Check if it's a header (starts with **)
+      if (line.match(/^\*\*(.*?)\*\*$/)) {
+        // Close any open list
+        if (inList) {
+          formatted += '</ul>';
+          inList = false;
+        }
+        // Add header
+        const headerText = line.replace(/^\*\*(.*?)\*\*$/, '$1');
+        formatted += `<h4>${headerText}</h4>`;
+      }
+      // Check if it's a bullet point
+      else if (line.match(/^[•*-]\s+(.+)$/)) {
+        // Open list if not already open
+        if (!inList) {
+          formatted += '<ul>';
+          inList = true;
+        }
+        // Add list item
+        const itemText = line.replace(/^[•*-]\s+(.+)$/, '$1');
+        formatted += `<li>${itemText}</li>`;
+      }
+      // Regular text
+      else if (line.length > 0) {
+        // Close any open list
+        if (inList) {
+          formatted += '</ul>';
+          inList = false;
+        }
+        formatted += `<p>${line}</p>`;
+      }
+    }
+    
+    // Close any remaining open list
+    if (inList) {
+      formatted += '</ul>';
+    }
+    
+    console.log('✅ Formatted AI summary HTML length:', formatted.length);
+    console.log('✅ Final formatted HTML:', formatted);
+    
+    const finalHtml = `<div class="th-ai-content">${formatted}</div>`;
+    console.log('✅ Complete AI content HTML:', finalHtml);
+    
+    return finalHtml;
+  }
+
+  hideAiSummaryButton() {
+    const aiButton = this.sidebarElement.querySelector('.th-ai-summary-controls');
+    if (aiButton) {
+      aiButton.style.display = 'none';
+    }
+  }
+
+  showAiSummaryButtonIfNeeded() {
+    // Only show if multiple countries are selected and AI is enabled
+    if (this.selectedCountries.length > 1) {
+      chrome.storage.local.get(['aiSummaryEnabled']).then(result => {
+        const isAiEnabled = result.aiSummaryEnabled || false;
+        if (isAiEnabled) {
+          const aiButton = this.sidebarElement.querySelector('.th-ai-summary-controls');
+          if (aiButton) {
+            aiButton.style.display = 'block';
+          }
+        }
+      });
+    }
+  }
+
+  collapseAllCountryCards() {
+    const countryCards = this.sidebarElement.querySelectorAll('.th-country-result:not(.th-ai-summary-result)');
+    countryCards.forEach(card => {
+      const content = card.querySelector('.th-country-content');
+      const expandBtn = card.querySelector('.th-expand-btn');
+      
+      if (content && expandBtn) {
+        content.style.display = 'none';
+        expandBtn.textContent = '▼';
+      }
+    });
+  }
+
+  expandAllCountryCards() {
+    const countryCards = this.sidebarElement.querySelectorAll('.th-country-result:not(.th-ai-summary-result)');
+    countryCards.forEach(card => {
+      const content = card.querySelector('.th-country-content');
+      const expandBtn = card.querySelector('.th-expand-btn');
+      
+      if (content && expandBtn) {
+        content.style.display = 'block';
+        expandBtn.textContent = '▲';
+      }
+    });
+  }
+
+  clearAiSummary() {
+    // Remove any existing AI summary when countries change
+    const existingSummary = this.sidebarElement.querySelector('.th-ai-summary-result');
+    if (existingSummary) {
+      existingSummary.remove();
+      console.log('🗑️ Cleared existing AI summary');
+    }
+  }
+
+  showAiError(message) {
+    const resultsContainer = this.sidebarElement.querySelector('.th-results-content');
+    if (!resultsContainer) return;
+
+    // Remove any existing AI error
+    const existingError = resultsContainer.querySelector('.th-ai-error');
+    if (existingError) {
+      existingError.remove();
+    }
+
+    const errorHTML = `
+      <div class="th-ai-error">
+        <div class="th-ai-error-content">
+          <span class="th-ai-error-icon">❌</span>
+          <span class="th-ai-error-text">${message}</span>
+          <button class="th-ai-error-close" title="Close Error">×</button>
+        </div>
+      </div>
+    `;
+
+    resultsContainer.insertAdjacentHTML('afterbegin', errorHTML);
+
+    // Add close handler
+    const closeBtn = resultsContainer.querySelector('.th-ai-error-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        const errorElement = resultsContainer.querySelector('.th-ai-error');
+        if (errorElement) {
+          errorElement.remove();
+        }
+      });
+    }
+
+    // Auto-remove after 10 seconds
+    setTimeout(() => {
+      const errorElement = resultsContainer.querySelector('.th-ai-error');
+      if (errorElement) {
+        errorElement.remove();
+      }
+    }, 10000);
+  }
+
   destroy() {
     if (this.sidebarElement) {
       this.sidebarElement.remove();
@@ -1961,6 +3099,11 @@ function countryAccordionHandler(event) {
     event.stopPropagation();
     
     const countryResult = countryHeader.closest('.th-country-expandable');
+    if (!countryResult) {
+      console.error('❌ Country result not found for header:', countryHeader);
+      return;
+    }
+    
     const countryContent = countryResult.querySelector('.th-country-content');
     const expandIndicator = countryHeader.querySelector('.th-country-expand-indicator');
     
@@ -2026,9 +3169,41 @@ function extractVaccineTitle(vaccine, description) {
     return vaccine.name || vaccine.n || '';
   }
   
-  // First, check for repetition patterns like "Disease Name Disease Name" or "A B A B"
+  const vaccineName = vaccine.name || vaccine.n || '';
   const words = description.trim().split(' ');
   
+  // PRIORITY 1: Handle compound disease names that start with different patterns  
+  if (words.length >= 2) {
+    const firstWord = words[0];
+    const secondWord = words[1];
+    const twoWords = `${firstWord} ${secondWord}`;
+    
+    // Check if this looks like a compound disease name
+    if (firstWord.toLowerCase().includes('tick-borne') || 
+        twoWords.toLowerCase() === 'yellow fever' ||
+        twoWords.toLowerCase() === 'japanese encephalitis' ||
+        twoWords.toLowerCase() === 'hepatitis a' ||
+        twoWords.toLowerCase() === 'hepatitis b' ||
+        twoWords.toLowerCase() === 'meningococcal meningitis' ||
+        twoWords.toLowerCase() === 'meningococcal disease') {
+      return twoWords;
+    }
+  }
+  
+  // PRIORITY 2: Look for patterns like "Disease Name (Additional Info)" at the very beginning
+  if (description.includes('(') && description.includes(')')) {
+    // Extract just the name with parentheses, but only if it's a reasonable length
+    const match = description.match(/^([^(]*\([^)]*\))/);
+    if (match) {
+      const result = match[1].trim();
+      // Only use parenthetical match if it's reasonable length (not the whole description)
+      if (result.split(' ').length <= 5) {
+        return result;
+      }
+    }
+  }
+  
+  // PRIORITY 3: Check for exact repetition patterns
   // Check for 2-word repetition: "Word1 Word2 Word1 Word2"
   if (words.length >= 4) {
     const firstTwo = `${words[0]} ${words[1]}`;
@@ -2052,39 +3227,22 @@ function extractVaccineTitle(vaccine, description) {
     return words[0];
   }
   
-  // Look for patterns like "Disease Name (Additional Info)" at the very beginning
-  if (description.includes('(') && description.includes(')')) {
-    // Extract just the name with parentheses, stopping at the first space after the closing parenthesis
-    const match = description.match(/^([^(]*\([^)]*\))/);
-    if (match) {
-      return match[1].trim();
+  // PRIORITY 4: If vaccine name appears at the start, use it (handles cases like "Tuberculosis TB...")
+  if (vaccineName && description.toLowerCase().startsWith(vaccineName.toLowerCase())) {
+    return vaccineName;
+  }
+  
+  // PRIORITY 5: Use first word if it's a clear disease name (and different from vaccine name)
+  const firstWord = words[0];
+  if (firstWord && firstWord !== vaccineName && firstWord.length > 2) {
+    // Check if it looks like a disease name (starts with capital letter, reasonable length)
+    if (/^[A-Z][a-z]+/.test(firstWord)) {
+      return firstWord;
     }
   }
   
-  // For compound names like "Tick-borne encephalitis", "Yellow fever", etc.
-  if (words.length >= 2) {
-    const firstWord = words[0];
-    const secondWord = words[1];
-    const twoWords = `${firstWord} ${secondWord}`;
-    
-    // Check if this looks like a compound disease name
-    if (firstWord.toLowerCase().includes('tick-borne') || 
-        twoWords.toLowerCase() === 'yellow fever' ||
-        twoWords.toLowerCase() === 'japanese encephalitis' ||
-        twoWords.toLowerCase() === 'hepatitis a' ||
-        twoWords.toLowerCase() === 'hepatitis b') {
-      return twoWords;
-    }
-  }
-  
-  // Check for single word titles that are different from the generic name
-  const firstWord = description.trim().split(' ')[0];
-  if (firstWord && firstWord !== (vaccine.name || vaccine.n)) {
-    return firstWord;
-  }
-  
-  // Final fallback: use the original vaccine name
-  return vaccine.name || vaccine.n || '';
+  // FINAL FALLBACK: Always use the original vaccine name as last resort
+  return vaccineName;
 }
 
 // Helper function to clean vaccine descriptions of duplicate names
